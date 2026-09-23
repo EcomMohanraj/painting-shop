@@ -4,13 +4,7 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, BadgeCheck, ShieldCheck, Sparkles } from "lucide-react";
 import { site, yearsInBusiness } from "@/lib/site";
-
-const swatches = [
-  { name: "Ivory Mist", color: "#f4ecdc" },
-  { name: "Harbour Blue", color: "#2c4a7c" },
-  { name: "Marigold", color: "#f8b820" },
-  { name: "Sage Leaf", color: "#b5c4a7" },
-];
+import { ColorFanDeck } from "./ColorFanDeck";
 
 export function Hero() {
   const reduce = useReducedMotion();
@@ -65,25 +59,10 @@ export function Hero() {
           </motion.ul>
         </div>
 
-        {/* Paint swatch visual — swap for a hero photo later if preferred */}
-        <div className="relative mx-auto aspect-square w-full max-w-md" aria-hidden>
-          {swatches.map((s, i) => (
-            <motion.div
-              key={s.name}
-              initial={reduce ? false : { opacity: 0, y: 40, rotate: 0 }}
-              animate={{ opacity: 1, y: 0, rotate: (i - 1.5) * 7 }}
-              transition={{ duration: 0.8, delay: 0.3 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute inset-x-[12%] top-[8%] origin-bottom rounded-2xl border border-white bg-white p-3 shadow-card"
-              style={{ zIndex: i }}
-            >
-              <div className="aspect-[4/3] rounded-xl" style={{ backgroundColor: s.color }} />
-              <div className="flex items-center justify-between px-1 pt-3 text-sm">
-                <span className="font-semibold text-navy-900">{s.name}</span>
-                <span className="text-xs text-charcoal-500">{s.color.toUpperCase()}</span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        {/* Interactive paint colour fan deck */}
+        <motion.div {...fadeUp(0.3)} className="w-full">
+          <ColorFanDeck />
+        </motion.div>
       </div>
     </section>
   );

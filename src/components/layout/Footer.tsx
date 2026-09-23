@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { navLinks, site, telLink } from "@/lib/site";
-import { services } from "@/data/services";
+import type { Service } from "@/data/services";
 import { Logo } from "./Logo";
 
-export function Footer() {
+export function Footer({ services }: { services: Pick<Service, "slug" | "title">[] }) {
   return (
     // Extra bottom padding on mobile keeps the floating buttons from covering footer text.
     <footer className="bg-navy-950 pb-24 pt-16 text-navy-100/80 sm:pb-16">

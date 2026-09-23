@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/PageHero";
 import { CtaBanner } from "@/components/ui/CtaBanner";
 import { GalleryGrid } from "@/components/gallery/GalleryGrid";
+import { getProjects } from "@/lib/content";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/gallery" },
 };
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const projects = await getProjects();
+
   return (
     <>
       <PageHero
@@ -20,7 +23,7 @@ export default function GalleryPage() {
       />
       <section className="section">
         <div className="container">
-          <GalleryGrid />
+          <GalleryGrid projects={projects} />
         </div>
       </section>
       <CtaBanner />

@@ -22,3 +22,9 @@ npm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma generated client (rebuilt by `npm install` / `npm run db:generate`)
+/src/generated/
+
+# admin image uploads saved locally (when Vercel Blob is not configured)
+/uploads/

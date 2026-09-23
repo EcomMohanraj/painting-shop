@@ -3,7 +3,6 @@
 import { useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, Loader2, Send } from "lucide-react";
-import { services } from "@/data/services";
 import { enquiryToText, validateEnquiry, type Enquiry as FormValues, type EnquiryErrors as Errors } from "@/lib/enquiry";
 import { whatsappLink } from "@/lib/site";
 
@@ -25,7 +24,7 @@ const initialValues: FormValues = {
  *     the click handler, or browsers treat it as a blocked pop-up).
  *  2. Emails the enquiry to the business via /api/enquiry (Resend) in the background.
  */
-export function QuoteForm() {
+export function QuoteForm({ serviceNames }: { serviceNames: string[] }) {
   const [values, setValues] = useState<FormValues>(initialValues);
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
@@ -131,8 +130,8 @@ export function QuoteForm() {
             <Field label="Service required" id="service" error={errors.service} required>
               <select id="quote-service" className="field" value={values.service} onChange={update("service")} aria-invalid={!!errors.service} aria-describedby={errors.service ? "quote-service-error" : undefined}>
                 <option value="">Select a service</option>
-                {services.map((s) => (
-                  <option key={s.slug}>{s.title}</option>
+                {serviceNames.map((name) => (
+                  <option key={name}>{name}</option>
                 ))}
                 <option>Other / Not sure</option>
               </select>

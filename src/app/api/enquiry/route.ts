@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { PropertyType } from "@/generated/prisma/enums";
+import { db, isDatabaseConfigured } from "@/lib/db";
 import { enquiryFields, enquiryToText, validateEnquiry, type Enquiry } from "@/lib/enquiry";
 import { site } from "@/lib/site";
 
-// Emails each quote enquiry to the business via Resend.
-// Required env vars (see .env.example): RESEND_API_KEY, ENQUIRY_TO_EMAIL.
-// Optional: ENQUIRY_FROM_EMAIL — defaults to Resend's shared test sender, which
+// Handles contact-form quote enquiries:
+//  1. Saves the enquiry to the database (Neon/Prisma) when DATABASE_URL is set.
+//  2. Emails it to the business via Resend when RESEND_API_KEY + ENQUIRY_TO_EMAIL are set.
+// The request succeeds if at least one of the two worked, so a lead is never lost
+// just because one service is down. See .env.example for the env vars.
+// ENQUIRY_FROM_EMAIL is optional — it defaults to Resend's shared test sender, which
 // can only deliver to the email address the Resend account was created with.
 
 const DEFAULT_FROM = `${site.name} Website <onboarding@resend.dev>`;
@@ -13,9 +18,11 @@ const DEFAULT_FROM = `${site.name} Website <onboarding@resend.dev>`;
 export async function POST(request: Request) {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.ENQUIRY_TO_EMAIL;
-  if (!apiKey || !to) {
-    console.error("[enquiry] RESEND_API_KEY or ENQUIRY_TO_EMAIL is not set — email not sent.");
-    return NextResponse.json({ ok: false, error: "Email is not configured." }, { status: 503 });
+  const emailConfigured = Boolean(apiKey && to);
+
+  if (!emailConfigured && !isDatabaseConfigured) {
+    console.error("[enquiry] Neither the database nor Resend is configured — enquiry not stored.");
+    return NextResponse.json({ ok: false, error: "Enquiries are not configured." }, { status: 503 });
   }
 
   let body: Record<string, unknown>;
@@ -40,21 +47,52 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, errors }, { status: 400 });
   }
 
-  const resend = new Resend(apiKey);
-  const { error } = await resend.emails.send({
-    from: process.env.ENQUIRY_FROM_EMAIL || DEFAULT_FROM,
-    to: to.split(",").map((s) => s.trim()),
-    replyTo: enquiry.email || undefined,
-    subject: `New quote enquiry: ${enquiry.service} — ${enquiry.name}`,
-    text: enquiryToText(enquiry),
-    html: renderHtml(enquiry),
-  });
-
-  if (error) {
-    console.error("[enquiry] Resend error:", error);
-    return NextResponse.json({ ok: false, error: "Could not send email." }, { status: 502 });
+  // 1. Save to the database.
+  let savedId: string | null = null;
+  if (isDatabaseConfigured) {
+    try {
+      const saved = await db.enquiry.create({
+        data: {
+          name: enquiry.name,
+          phone: enquiry.phone,
+          email: enquiry.email || null,
+          location: enquiry.location || null,
+          propertyType: enquiry.propertyType === "Commercial" ? PropertyType.COMMERCIAL : PropertyType.RESIDENTIAL,
+          service: enquiry.service,
+          message: enquiry.message || null,
+        },
+        select: { id: true },
+      });
+      savedId = saved.id;
+    } catch (err) {
+      console.error("[enquiry] Database save failed:", err);
+    }
   }
 
+  // 2. Email the business.
+  let emailed = false;
+  if (emailConfigured) {
+    const { error } = await new Resend(apiKey).emails.send({
+      from: process.env.ENQUIRY_FROM_EMAIL || DEFAULT_FROM,
+      to: to!.split(",").map((s) => s.trim()),
+      replyTo: enquiry.email || undefined,
+      subject: `New quote enquiry: ${enquiry.service} — ${enquiry.name}`,
+      text: enquiryToText(enquiry),
+      html: renderHtml(enquiry),
+    });
+    if (error) console.error("[enquiry] Resend error:", error);
+    emailed = !error;
+  }
+
+  if (savedId && emailed) {
+    await db.enquiry
+      .update({ where: { id: savedId }, data: { emailSent: true } })
+      .catch((err) => console.error("[enquiry] Could not mark email as sent:", err));
+  }
+
+  if (!savedId && !emailed) {
+    return NextResponse.json({ ok: false, error: "Could not submit enquiry." }, { status: 502 });
+  }
   return NextResponse.json({ ok: true });
 }
 

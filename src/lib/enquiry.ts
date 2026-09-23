@@ -40,6 +40,8 @@ export function validateEnquiry(v: Enquiry): EnquiryErrors {
   if (v.phone.replace(/\D/g, "").length < 10) errors.phone = "Please enter a valid phone number.";
   if (v.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email)) errors.email = "Please enter a valid email.";
   if (!v.service) errors.service = "Please choose a service.";
+  if (v.propertyType !== "Residential" && v.propertyType !== "Commercial")
+    errors.propertyType = "Please choose a property type.";
   for (const field of enquiryFields) {
     if (v[field].length > maxLengths[field]) errors[field] = "This is too long.";
   }

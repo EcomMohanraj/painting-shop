@@ -3,17 +3,19 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { MapPin } from "lucide-react";
-import { galleryCategories, galleryProjects } from "@/data/gallery";
+import type { GalleryProject } from "@/data/gallery";
 import { BeforeAfterSlider } from "./BeforeAfterSlider";
 
-type Category = (typeof galleryCategories)[number];
+export function GalleryGrid({ projects: all, showFilters = true }: { projects: GalleryProject[]; showFilters?: boolean }) {
+  const [active, setActive] = useState("All");
 
-export function GalleryGrid({ limit, showFilters = true }: { limit?: number; showFilters?: boolean }) {
-  const [active, setActive] = useState<Category>("All");
+  // Filter buttons only for categories that actually have projects.
+  const galleryCategories = ["All", ...Array.from(new Set(all.map((p) => p.category)))];
+  const projects = all.filter((p) => active === "All" || p.category === active);
 
-  const projects = galleryProjects
-    .filter((p) => active === "All" || p.category === active)
-    .slice(0, limit);
+  if (all.length === 0) {
+    return <p className="text-center text-charcoal-600">New projects coming soon.</p>;
+  }
 
   return (
     <div>

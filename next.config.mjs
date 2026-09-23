@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // Add remote hosts here if gallery images are later served from a CDN/storage bucket.
-    remotePatterns: [],
+    // Admin uploads are stored on Cloudinary; placeholder photos come from Unsplash.
+    remotePatterns: [
+      { protocol: "https", hostname: "res.cloudinary.com" },
+      { protocol: "https", hostname: "images.unsplash.com" },
+    ],
   },
 };
 

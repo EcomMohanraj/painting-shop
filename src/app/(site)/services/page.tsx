@@ -4,7 +4,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import { CtaBanner } from "@/components/ui/CtaBanner";
-import { services } from "@/data/services";
+import { getServices } from "@/lib/content";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -20,8 +20,10 @@ const process = [
   { step: "04", title: "Painting & handover", text: "Finish coats, final inspection and complete cleanup." },
 ];
 
-export default function ServicesPage() {
-  const groups = ["Residential", "Commercial"] as const;
+export default async function ServicesPage() {
+  const services = await getServices();
+  // Only show a group if it has at least one published service.
+  const groups = (["Residential", "Commercial"] as const).filter((g) => services.some((s) => s.category === g));
 
   return (
     <>

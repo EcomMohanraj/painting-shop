@@ -24,9 +24,9 @@ export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
         </span>
         <span>
           <span className="block font-semibold text-navy-900">{name}</span>
-          <span className="block text-xs text-charcoal-500">
-            {project} · {location}
-          </span>
+          {(project || location) && (
+            <span className="block text-xs text-charcoal-500">{[project, location].filter(Boolean).join(" · ")}</span>
+          )}
         </span>
       </figcaption>
     </figure>

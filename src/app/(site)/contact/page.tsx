@@ -4,6 +4,7 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { QuoteForm } from "@/components/contact/QuoteForm";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import { getServices } from "@/lib/content";
 import { site, telLink, whatsappLink } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -19,7 +20,9 @@ const contactItems = [
   { icon: Clock, label: "Working hours", value: site.hours },
 ];
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const services = await getServices();
+
   return (
     <>
       <PageHero
@@ -71,7 +74,7 @@ export default function ContactPage() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <QuoteForm />
+            <QuoteForm serviceNames={services.map((s) => s.title)} />
           </Reveal>
         </div>
       </section>

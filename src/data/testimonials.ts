@@ -1,4 +1,5 @@
-// Placeholder testimonials — replace with genuine customer reviews.
+// Placeholder testimonials — used by prisma/seed.ts, and by the site only when
+// DATABASE_URL isn't set. Live content is managed in /admin.
 export type Testimonial = {
   name: string;
   location: string;

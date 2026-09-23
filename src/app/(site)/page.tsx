@@ -9,10 +9,15 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import { TestimonialCard } from "@/components/ui/TestimonialCard";
-import { services } from "@/data/services";
-import { testimonials } from "@/data/testimonials";
+import { getHomeProjects, getHomeTestimonials, getServices } from "@/lib/content";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [services, projects, testimonials] = await Promise.all([
+    getServices(),
+    getHomeProjects(3),
+    getHomeTestimonials(3),
+  ]);
+
   return (
     <>
       <Hero />
@@ -42,6 +47,7 @@ export default function HomePage() {
 
       <WhyChooseUs />
 
+      {projects.length > 0 && (
       <section className="section">
         <div className="container">
           <SectionHeading
@@ -50,7 +56,7 @@ export default function HomePage() {
             description="Drag the slider on each project to compare the before and after."
           />
           <div className="mt-12">
-            <GalleryGrid limit={3} showFilters={false} />
+            <GalleryGrid projects={projects} showFilters={false} />
           </div>
           <div className="mt-10 text-center">
             <Link href="/gallery" className="btn-outline">
@@ -59,12 +65,14 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      )}
 
+      {testimonials.length > 0 && (
       <section className="section bg-navy-50/50">
         <div className="container">
           <SectionHeading eyebrow="Testimonials" title="What our clients say" />
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {testimonials.slice(0, 3).map((t, i) => (
+            {testimonials.map((t, i) => (
               <Reveal key={i} delay={i * 0.08}>
                 <TestimonialCard testimonial={t} />
               </Reveal>
@@ -77,6 +85,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      )}
 
       <CtaBanner />
     </>

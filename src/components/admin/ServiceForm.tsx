@@ -3,6 +3,7 @@
 import { useFormState } from "react-dom";
 import { serviceCategories, serviceIcons } from "@/lib/admin-options";
 import { SubmitButton } from "./FormControls";
+import { ImageUpload } from "./ImageUpload";
 import { Checkbox, Field, FormError, type FormState } from "./ui";
 
 export type ServiceFormValues = {
@@ -12,6 +13,7 @@ export type ServiceFormValues = {
   description: string | null;
   features: string[];
   icon: string;
+  image: string | null;
   published: boolean;
   sortOrder: number;
 };
@@ -69,6 +71,15 @@ export function ServiceForm({
         <div className="sm:col-span-2">
           <Checkbox name="published" label="Published (visible on website)" defaultChecked={initial?.published ?? true} />
         </div>
+      </section>
+
+      <section className="rounded-2xl border border-navy-50 bg-white p-6 shadow-card">
+        <h2 className="font-semibold">Photo</h2>
+        <p className="mt-1 text-sm text-charcoal-600">Shown on the service card. Without one, the card shows its icon instead.</p>
+        <div className="mt-4">
+          <ImageUpload name="image" label="Service photo" defaultValue={initial?.image} />
+        </div>
+        {err("image") && <p className="mt-2 text-xs font-medium text-red-600">{err("image")?.join(" ")}</p>}
       </section>
       <SubmitButton label="Save service" />
     </form>

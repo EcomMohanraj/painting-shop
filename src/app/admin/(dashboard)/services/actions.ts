@@ -6,9 +6,10 @@ import { z } from "zod";
 import { ServiceCategory } from "@/generated/prisma/enums";
 import type { FormState } from "@/components/admin/ui";
 import { serviceIcons } from "@/lib/admin-options";
-import { checkbox, fieldErrors, optionalText, requiredText, sortOrder, text, uniqueSlug } from "@/lib/admin-forms";
+import { checkbox, fieldErrors, imageUrl, optionalText, requiredText, sortOrder, text, uniqueSlug } from "@/lib/admin-forms";
 import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { deleteImage } from "@/lib/storage";
 
 const serviceSchema = z.object({
   title: requiredText("Title", 100),
@@ -21,6 +22,7 @@ const serviceSchema = z.object({
     .transform((v) => v.split("\n").map((l) => l.trim()).filter(Boolean))
     .pipe(z.array(z.string().max(120, "Each feature must be 120 characters or fewer.")).max(12, "Up to 12 features.")),
   icon: z.enum(serviceIcons.map((i) => i.value) as [string, ...string[]], "Choose an icon."),
+  image: z.union([z.literal("").transform(() => null), imageUrl]),
   published: z.boolean(),
   sortOrder,
 });
@@ -33,6 +35,7 @@ function parse(formData: FormData) {
     description: text(formData, "description"),
     features: text(formData, "features"),
     icon: text(formData, "icon"),
+    image: text(formData, "image"),
     published: checkbox(formData, "published"),
     sortOrder: text(formData, "sortOrder"),
   });
@@ -62,8 +65,12 @@ export async function updateService(id: string, _prev: FormState, formData: Form
   if (!parsed.success) return { errors: fieldErrors(parsed.error), message: "Please fix the highlighted fields." };
 
   // The slug stays the same on edit so existing links (/services#slug) keep working.
-  const updated = await db.service.updateMany({ where: { id }, data: parsed.data });
-  if (updated.count === 0) return { message: "This service no longer exists." };
+  const existing = await db.service.findUnique({ where: { id }, select: { image: true } });
+  if (!existing) return { message: "This service no longer exists." };
+  await db.service.update({ where: { id }, data: parsed.data });
+
+  // Remove the old photo if it was replaced or cleared.
+  if (existing.image !== parsed.data.image) await deleteImage(existing.image);
 
   revalidate();
   redirect("/admin/services?saved=1");

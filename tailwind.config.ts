@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
@@ -40,12 +41,30 @@ const config: Config = {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         display: ["var(--font-display)", "var(--font-sans)", "system-ui", "sans-serif"],
       },
+      // Fluid "gallery wall" headline sizes.
+      fontSize: {
+        "display-xl": ["clamp(2.5rem, 6vw, 5.5rem)", { lineHeight: "0.98", letterSpacing: "-0.035em" }],
+        "display-lg": ["clamp(2.25rem, 4.6vw, 4.25rem)", { lineHeight: "1.02", letterSpacing: "-0.03em" }],
+        "display-md": ["clamp(1.875rem, 3.2vw, 3rem)", { lineHeight: "1.08", letterSpacing: "-0.025em" }],
+      },
       boxShadow: {
         card: "0 1px 2px rgba(15,29,53,0.04), 0 8px 24px -8px rgba(15,29,53,0.12)",
+        lift: "0 2px 4px rgba(15,29,53,0.04), 0 24px 48px -20px rgba(15,29,53,0.22)",
+        hero: "0 4px 8px rgba(15,29,53,0.05), 0 48px 96px -32px rgba(15,29,53,0.35)",
+      },
+      // Same curve as EASE in src/lib/motion.ts.
+      transitionTimingFunction: {
+        brand: "cubic-bezier(0.22, 1, 0.36, 1)",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // `can-hover:` applies only on devices with a real hover (mouse/trackpad),
+    // so hover-only reveals never hide content on touch screens.
+    plugin(({ addVariant }) => {
+      addVariant("can-hover", "@media (hover: hover) and (pointer: fine)");
+    }),
+  ],
 };
 
 export default config;

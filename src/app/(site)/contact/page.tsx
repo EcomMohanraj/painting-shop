@@ -32,15 +32,15 @@ export default async function ContactPage() {
       />
 
       <section className="section">
-        <div className="container grid gap-10 lg:grid-cols-[1fr_1.4fr]">
+        <div className="container grid gap-14 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
           <Reveal>
-            <h2 className="text-2xl font-bold">Talk to our team</h2>
-            <p className="mt-2 text-charcoal-600">Prefer to speak directly? Reach us any of these ways.</p>
+            <h2 className="text-display-md font-extrabold">Talk to our team</h2>
+            <p className="mt-4 text-lg text-charcoal-600">Prefer to speak directly? Reach us any of these ways.</p>
 
             <ul className="mt-8 space-y-4">
               {contactItems.map(({ icon: Icon, label, value, href }) => (
-                <li key={label} className="flex gap-4 rounded-xl border border-navy-50 p-4">
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-gold-50 text-gold-600">
+                <li key={label} className="flex gap-4 rounded-2xl bg-white p-5 shadow-lift ring-1 ring-navy-50">
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-gold-400 text-navy-950">
                     <Icon className="h-5 w-5" aria-hidden />
                   </span>
                   <div className="min-w-0">
@@ -61,14 +61,14 @@ export default async function ContactPage() {
               href={whatsappLink()}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn mt-6 w-full bg-[#25D366] text-white hover:bg-[#1ebe5b]"
+              className="btn btn-lg mt-6 w-full bg-[#25D366] text-navy-950 hover:bg-[#1ebe5b]"
             >
               <WhatsAppIcon className="h-5 w-5" />
               Chat on WhatsApp
             </a>
 
             {/* TODO: replace with a Google Maps embed of the business location */}
-            <div className="mt-6 grid aspect-video place-items-center rounded-xl bg-navy-50 text-sm font-medium uppercase tracking-widest text-navy-700/50">
+            <div className="mt-6 grid aspect-video place-items-center rounded-2xl bg-navy-50 text-sm font-medium uppercase tracking-widest text-navy-700/50">
               Map placeholder
             </div>
           </Reveal>

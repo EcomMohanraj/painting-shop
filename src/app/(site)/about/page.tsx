@@ -4,6 +4,8 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { CtaBanner } from "@/components/ui/CtaBanner";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Timeline } from "@/components/ui/Timeline";
 import { site, yearsInBusiness } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -30,24 +32,23 @@ export default function AboutPage() {
       />
 
       <section className="section">
-        <div className="container grid items-center gap-12 lg:grid-cols-2">
-          <Reveal>
+        <div className="container grid items-center gap-16 lg:grid-cols-2">
+          <Reveal direction="right">
             {/* Placeholder image block — replace with a team or project photo */}
-            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-navy-100">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gradient-to-br from-navy-100 via-navy-50 to-gold-100 shadow-hero">
               <div className="absolute inset-0 grid place-items-center text-sm font-medium uppercase tracking-widest text-navy-700/50">
                 Team photo
               </div>
-              <div className="absolute bottom-4 left-4 rounded-2xl bg-gold-400 px-5 py-4 text-navy-950 shadow-lg">
-                <p className="font-display text-3xl font-extrabold leading-none">{yearsInBusiness}+</p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wider">Years of excellence</p>
+              <div className="absolute bottom-6 left-6 rounded-2xl bg-gold-400 px-6 py-5 text-navy-950 shadow-lift">
+                <p className="font-display text-5xl font-extrabold leading-none">{yearsInBusiness}+</p>
+                <p className="mt-2 text-xs font-semibold uppercase tracking-wider">Years of excellence</p>
               </div>
             </div>
           </Reveal>
 
-          <Reveal delay={0.1}>
-            <p className="eyebrow">Our story</p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Built on craftsmanship and trust</h2>
-            <div className="mt-5 space-y-4 leading-relaxed text-charcoal-600">
+          <div>
+            <SectionHeading align="left" eyebrow="Our story" title="Built on craftsmanship and trust" />
+            <Reveal delay={0.1} className="mt-8 space-y-5 text-lg leading-relaxed text-charcoal-600">
               <p>
                 Placeholder copy. {site.name} started in {site.established} with a simple goal: deliver painting work
                 that looks great, lasts long, and is completed without hassle for the customer.
@@ -56,15 +57,15 @@ export default function AboutPage() {
                 Today our trained team handles everything from single-room makeovers to large commercial and industrial
                 projects — with the same attention to surface preparation, finish quality and cleanliness.
               </p>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
         </div>
       </section>
 
       <section className="section pt-0">
         <div className="container grid gap-6 md:grid-cols-2">
           <Reveal>
-            <div className="h-full rounded-2xl border border-navy-50 p-8 shadow-card">
+            <div className="h-full rounded-[1.75rem] bg-white p-10 shadow-lift ring-1 ring-navy-50">
               <Target className="h-8 w-8 text-gold-500" aria-hidden />
               <h3 className="mt-4 text-xl font-bold">Our mission</h3>
               <p className="mt-2 leading-relaxed text-charcoal-600">
@@ -73,7 +74,7 @@ export default function AboutPage() {
             </div>
           </Reveal>
           <Reveal delay={0.1}>
-            <div className="h-full rounded-2xl border border-navy-50 p-8 shadow-card">
+            <div className="h-full rounded-[1.75rem] bg-navy-950 p-10 shadow-lift [&_h3]:text-white [&_p]:text-navy-100/75">
               <Eye className="h-8 w-8 text-gold-500" aria-hidden />
               <h3 className="mt-4 text-xl font-bold">Our vision</h3>
               <p className="mt-2 leading-relaxed text-charcoal-600">
@@ -84,21 +85,12 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="section bg-navy-50/50">
-        <div className="container max-w-3xl">
-          <p className="eyebrow text-center">Our journey</p>
-          <h2 className="mt-3 text-center text-3xl font-bold tracking-tight sm:text-4xl">Milestones</h2>
-          <ol className="relative mt-12 space-y-8 border-l-2 border-gold-200 pl-8">
-            {milestones.map((m, i) => (
-              <li key={m.year} className="relative">
-                <Reveal delay={i * 0.08}>
-                  <span className="absolute -left-[2.6rem] top-1 h-4 w-4 rounded-full border-4 border-white bg-gold-400 shadow" />
-                  <p className="font-display text-lg font-bold text-navy-900">{m.year}</p>
-                  <p className="mt-1 text-charcoal-600">{m.text}</p>
-                </Reveal>
-              </li>
-            ))}
-          </ol>
+      <section className="section bg-[#fbf8f1]">
+        <div className="container max-w-5xl">
+          <SectionHeading eyebrow="Our journey" title={`Since ${site.established}, one wall at a time`} />
+          <div className="mt-20">
+            <Timeline items={milestones} />
+          </div>
         </div>
       </section>
 

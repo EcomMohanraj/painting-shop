@@ -6,6 +6,11 @@
   html {
     scroll-behavior: smooth;
   }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
   body {
     @apply bg-white text-charcoal-700 antialiased;
   }
@@ -15,11 +20,14 @@
   h4 {
     @apply font-display text-navy-900;
   }
+  ::selection {
+    @apply bg-gold-300 text-navy-950;
+  }
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition duration-300 ease-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60;
   }
   .btn-primary {
     @apply btn bg-gold-400 text-navy-950 hover:bg-gold-300;
@@ -33,8 +41,12 @@
   .btn-outline-light {
     @apply btn border border-white/30 text-white hover:border-white hover:bg-white/5;
   }
+  /* After the variants so its padding wins over theirs. */
+  .btn-lg {
+    @apply px-8 py-4 text-base;
+  }
   .section {
-    @apply py-16 sm:py-20 lg:py-24;
+    @apply py-20 sm:py-28 lg:py-32;
   }
   .eyebrow {
     @apply text-xs font-bold uppercase tracking-[0.18em] text-gold-600;
@@ -42,4 +54,17 @@
   .field {
     @apply w-full rounded-lg border border-navy-100 bg-white px-4 py-3 text-sm text-navy-900 placeholder:text-charcoal-500/70 transition focus:border-gold-400 focus:outline-none focus:ring-2 focus:ring-gold-200;
   }
+}
+
+/* Custom paint-dot cursor (src/components/ui/PaintCursor.tsx). Only switched on
+   for mouse/trackpad users without reduced motion; text fields keep the native caret. */
+.paint-cursor,
+.paint-cursor * {
+  cursor: none !important;
+}
+.paint-cursor :is(input:not([type="range"]):not([type="checkbox"]):not([type="radio"]), textarea, [contenteditable]) {
+  cursor: text !important;
+}
+.paint-cursor select {
+  cursor: pointer !important;
 }

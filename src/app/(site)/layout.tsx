@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingActions } from "@/components/ui/FloatingActions";
+import { PaintCursor } from "@/components/ui/PaintCursor";
 import { getServices } from "@/lib/content";
 
 // Public pages are static and refreshed immediately when content is saved in
@@ -24,6 +25,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <main id="main">{children}</main>
       <Footer services={services} />
       <FloatingActions />
+      <PaintCursor />
     </>
   );
 }

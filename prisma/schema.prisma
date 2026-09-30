@@ -159,3 +159,16 @@ model Enquiry {
   @@index([createdAt])
   @@map("enquiries")
 }
+
+// ─── Site photos ────────────────────────────────────────────────────────────
+
+/// Standalone images not tied to a project/service/testimonial, one per slot
+/// key (slots are listed in src/lib/admin-options.ts → siteImageSlots).
+model SiteImage {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  url       String?
+  updatedAt DateTime @updatedAt
+
+  @@map("site_images")
+}

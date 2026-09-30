@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Eye, Target } from "lucide-react";
 import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
@@ -6,6 +7,8 @@ import { CtaBanner } from "@/components/ui/CtaBanner";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Timeline } from "@/components/ui/Timeline";
+import { getSiteImage } from "@/lib/content";
+import { PHOTO_BLUR } from "@/lib/image";
 import { site, yearsInBusiness } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -22,7 +25,9 @@ const milestones = [
   { year: "Today", text: "Hundreds of homes and businesses transformed across the region." },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const teamPhoto = await getSiteImage("about-team-photo");
+
   return (
     <>
       <PageHero
@@ -34,11 +39,23 @@ export default function AboutPage() {
       <section className="section">
         <div className="container grid items-center gap-16 lg:grid-cols-2">
           <Reveal direction="right">
-            {/* Placeholder image block — replace with a team or project photo */}
+            {/* Team photo from Admin → Site Photos; placeholder until one is uploaded. */}
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gradient-to-br from-navy-100 via-navy-50 to-gold-100 shadow-hero">
-              <div className="absolute inset-0 grid place-items-center text-sm font-medium uppercase tracking-widest text-navy-700/50">
-                Team photo
-              </div>
+              {teamPhoto ? (
+                <Image
+                  src={teamPhoto}
+                  alt={`The ${site.name} team`}
+                  fill
+                  sizes="(min-width: 1024px) 45vw, 100vw"
+                  placeholder="blur"
+                  blurDataURL={PHOTO_BLUR}
+                  className="object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 grid place-items-center text-sm font-medium uppercase tracking-widest text-navy-700/50">
+                  Team photo
+                </div>
+              )}
               <div className="absolute bottom-6 left-6 rounded-2xl bg-gold-400 px-6 py-5 text-navy-950 shadow-lift">
                 <p className="font-display text-5xl font-extrabold leading-none">{yearsInBusiness}+</p>
                 <p className="mt-2 text-xs font-semibold uppercase tracking-wider">Years of excellence</p>

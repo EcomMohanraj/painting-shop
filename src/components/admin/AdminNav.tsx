@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FolderKanban, Inbox, LayoutDashboard, MessageSquareQuote, Wrench } from "lucide-react";
+import { FolderKanban, ImageIcon, Inbox, LayoutDashboard, MessageSquareQuote, Wrench } from "lucide-react";
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -10,6 +10,7 @@ const links = [
   { href: "/admin/projects", label: "Projects", icon: FolderKanban },
   { href: "/admin/services", label: "Services", icon: Wrench },
   { href: "/admin/testimonials", label: "Testimonials", icon: MessageSquareQuote },
+  { href: "/admin/site-content", label: "Site Photos", icon: ImageIcon },
 ];
 
 export function AdminNav() {

@@ -6,6 +6,8 @@ export type Testimonial = {
   project: string;
   rating: 1 | 2 | 3 | 4 | 5;
   quote: string;
+  /** Customer photo URL; the card shows their initial when absent. */
+  photo?: string;
 };
 
 export const testimonials: Testimonial[] = [

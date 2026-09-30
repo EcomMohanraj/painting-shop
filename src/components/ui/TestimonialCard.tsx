@@ -1,8 +1,10 @@
+import Image from "next/image";
 import type { Testimonial } from "@/data/testimonials";
+import { PHOTO_BLUR } from "@/lib/image";
 import { StarRating } from "./StarRating";
 
 export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
-  const { name, location, project, rating, quote } = testimonial;
+  const { name, location, project, rating, quote, photo } = testimonial;
   return (
     <figure className="relative flex h-full flex-col overflow-hidden rounded-[2rem] bg-white p-8 shadow-lift sm:p-12">
       {/* Oversized quote mark, like a gallery wall label. */}
@@ -14,9 +16,16 @@ export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
         &ldquo;{quote}&rdquo;
       </blockquote>
       <figcaption className="relative mt-8 flex items-center gap-4">
-        <span aria-hidden className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-navy-900 font-display text-lg font-bold text-gold-300">
-          {name.charAt(0)}
-        </span>
+        {photo ? (
+          // Decorative: the name is right beside it.
+          <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-navy-100 ring-2 ring-gold-300">
+            <Image src={photo} alt="" fill sizes="48px" placeholder="blur" blurDataURL={PHOTO_BLUR} draggable={false} className="object-cover" />
+          </span>
+        ) : (
+          <span aria-hidden className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-navy-900 font-display text-lg font-bold text-gold-300">
+            {name.charAt(0)}
+          </span>
+        )}
         <span>
           <span className="block font-semibold text-navy-900">{name}</span>
           {(project || location) && (

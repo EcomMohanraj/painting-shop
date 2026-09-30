@@ -27,3 +27,9 @@ export const serviceIcons = [
 
 export const labelFor = (options: readonly { value: string; label: string }[], value: string) =>
   options.find((o) => o.value === value)?.label ?? value;
+
+// Standalone site photos (SiteImage rows), managed in /admin/site-content.
+// Add a slot here to make it editable — no migration or new form needed.
+export const siteImageSlots = [
+  { key: "about-team-photo", label: "About page — Team photo" },
+] as const;

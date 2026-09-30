@@ -2,6 +2,7 @@
 
 import { useFormState } from "react-dom";
 import { SubmitButton } from "./FormControls";
+import { ImageUpload } from "./ImageUpload";
 import { Checkbox, Field, FormError, type FormState } from "./ui";
 
 export type TestimonialFormValues = {
@@ -10,6 +11,7 @@ export type TestimonialFormValues = {
   project: string | null;
   rating: number;
   quote: string;
+  photo?: string | null;
   featured: boolean;
   published: boolean;
   sortOrder: number;
@@ -58,6 +60,16 @@ export function TestimonialForm({
           <Checkbox name="featured" label="Featured on home page" defaultChecked={initial?.featured ?? false} />
         </div>
       </section>
+
+      <section className="rounded-2xl border border-navy-50 bg-white p-6 shadow-card">
+        <h2 className="font-semibold">Photo</h2>
+        <p className="mt-1 text-sm text-charcoal-600">Shown as a round avatar beside the review. Without one, the customer&apos;s initial is shown.</p>
+        <div className="mt-4">
+          <ImageUpload name="photo" label="Customer photo (optional)" defaultValue={initial?.photo} />
+        </div>
+        {err("photo") && <p className="mt-2 text-xs font-medium text-red-600">{err("photo")?.join(" ")}</p>}
+      </section>
+
       <SubmitButton label="Save testimonial" />
     </form>
   );

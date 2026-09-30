@@ -75,6 +75,7 @@ export async function getTestimonials({ featured }: { featured?: boolean } = {})
     project: t.project ?? "",
     rating: Math.min(5, Math.max(1, t.rating)) as Testimonial["rating"],
     quote: t.quote,
+    photo: t.photo ?? undefined,
   }));
 }
 
@@ -82,4 +83,13 @@ export async function getTestimonials({ featured }: { featured?: boolean } = {})
 export async function getHomeTestimonials(limit = 3): Promise<Testimonial[]> {
   const featured = await getTestimonials({ featured: true });
   return (featured.length ? featured : await getTestimonials()).slice(0, limit);
+}
+
+// ─── Site photos ────────────────────────────────────────────────────────────
+
+/** URL of a standalone site photo (see siteImageSlots), or null if not set. */
+export async function getSiteImage(key: string): Promise<string | null> {
+  if (!isDatabaseConfigured) return null;
+  const row = await db.siteImage.findUnique({ where: { key } });
+  return row?.url ?? null;
 }

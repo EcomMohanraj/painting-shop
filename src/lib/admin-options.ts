@@ -31,5 +31,6 @@ export const labelFor = (options: readonly { value: string; label: string }[], v
 // Standalone site photos (SiteImage rows), managed in /admin/site-content.
 // Add a slot here to make it editable — no migration or new form needed.
 export const siteImageSlots = [
+  { key: "home-hero-photo", label: "Homepage hero photo" },
   { key: "about-team-photo", label: "About page — Team photo" },
 ] as const;

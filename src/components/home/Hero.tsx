@@ -17,7 +17,17 @@ export type HeroPhoto = { src: string; alt: string; caption?: string };
 // Swatch chips beside the hero photo (illustrative shades from the colour studio).
 const chips = ["#C97C5D", "#B5C4A7", "#4A7A96"];
 
-export function Hero({ photo }: { photo?: HeroPhoto }) {
+type HeroProps = {
+  /** Dedicated hero photo URL (Admin → Site Photos → "home-hero-photo"), or null if not uploaded. */
+  photo?: string | null;
+  /** Shown when there's no dedicated photo: a finished project or service photo. */
+  fallbackPhoto?: HeroPhoto;
+};
+
+export function Hero({ photo: dedicated, fallbackPhoto }: HeroProps) {
+  const photo: HeroPhoto | undefined = dedicated
+    ? { src: dedicated, alt: `A freshly painted space by ${site.name}` }
+    : fallbackPhoto;
   const reduce = useReducedMotion();
   const finePointer = useMediaQuery(FINE_POINTER);
   const ref = useRef<HTMLElement>(null);

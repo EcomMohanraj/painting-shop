@@ -10,13 +10,14 @@ import { Reveal, RevealItem } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import { TestimonialCarousel } from "@/components/ui/TestimonialCarousel";
-import { getHomeProjects, getHomeTestimonials, getServices } from "@/lib/content";
+import { getHomeProjects, getHomeTestimonials, getServices, getSiteImage } from "@/lib/content";
 
 export default async function HomePage() {
-  const [services, projects, testimonials] = await Promise.all([
+  const [services, projects, testimonials, heroPhoto] = await Promise.all([
     getServices(),
     getHomeProjects(3),
     getHomeTestimonials(3),
+    getSiteImage("home-hero-photo"),
   ]);
 
   // Photos for the visual set pieces, taken from the content already loaded above.
@@ -26,11 +27,12 @@ export default async function HomePage() {
   const servicePhotos: FanPhoto[] = services
     .filter((s) => s.image)
     .map((s) => ({ src: s.image!, alt: s.title, caption: s.title }));
-  const heroPhoto: HeroPhoto | undefined = projectPhotos[0] ?? servicePhotos[0];
+  // Used by the hero only until a dedicated photo is uploaded in Admin → Site Photos.
+  const heroFallback: HeroPhoto | undefined = projectPhotos[0] ?? servicePhotos[0];
 
   return (
     <>
-      <Hero photo={heroPhoto} />
+      <Hero photo={heroPhoto} fallbackPhoto={heroFallback} />
       <Stats />
 
       <section className="section">

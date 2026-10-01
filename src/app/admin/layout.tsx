@@ -8,7 +8,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
   manifest: "/manifest.json",
   appleWebApp: { capable: true, title: "KP Admin", statusBarStyle: "black-translucent" },
-  icons: { apple: "/icons/admin-apple-touch-180.png" },
+  // Setting `icons` here replaces the root's auto-detected icons, so re-add the
+  // site favicon (src/app/icon.png) alongside the admin PWA's own Apple icon.
+  icons: {
+    icon: { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    apple: "/icons/admin-apple-touch-180.png",
+  },
 };
 
 export const viewport: Viewport = {

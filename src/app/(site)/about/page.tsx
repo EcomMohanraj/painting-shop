@@ -111,7 +111,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <WhyChooseUs />
+      <WhyChooseUs images={teamPhoto ? [teamPhoto] : []} />
       <CtaBanner />
     </>
   );

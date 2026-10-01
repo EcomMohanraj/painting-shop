@@ -79,8 +79,11 @@ export function WhyChooseUs({ images = [] }: { images?: string[] }) {
         <div aria-hidden className="relative order-first lg:order-none">
           <div className="relative aspect-[16/11] overflow-hidden rounded-[2rem] shadow-hero lg:sticky lg:top-28 lg:aspect-[4/5]">
             <AnimatePresence initial={false}>
+              {/* Keyed by the photo when there is one, so a single photo (e.g. the
+                  About page's team photo) stays put instead of re-animating on
+                  every hover; without photos, each reason crossfades its colour. */}
               <motion.div
-                key={active}
+                key={image ?? active}
                 className="absolute inset-0"
                 initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 1.08 }}
                 animate={{ opacity: 1, scale: 1 }}

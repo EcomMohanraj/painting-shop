@@ -67,10 +67,10 @@ export default async function ContactPage() {
               Chat on WhatsApp
             </a>
 
-            {/* TODO: replace with a Google Maps embed of the business location */}
+            {/* TODO: replace with a Google Maps embed of the business location
             <div className="mt-6 grid aspect-video place-items-center rounded-2xl bg-navy-50 text-sm font-medium uppercase tracking-widest text-navy-700/50">
               Map placeholder
-            </div>
+            </div> */}
           </Reveal>
 
           <Reveal delay={0.1}>
